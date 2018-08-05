@@ -28,6 +28,7 @@
     </div>
     <input class="form-control"
            formControlName="gross"
+           type="number"
            required
            [readonly]="!calculatorForm.get('grossOnly').value">
   </div>
@@ -41,6 +42,7 @@
     </div>
     <input class="form-control"
            formControlName="grossPlusSuper"
+           type="number"
            required
            [readonly]="calculatorForm.get('grossOnly').value">
   </div>

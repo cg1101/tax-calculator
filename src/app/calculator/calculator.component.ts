@@ -35,11 +35,11 @@ export class CalculatorComponent implements OnDestroy {
       superRate: new FormControl(superRate, Validators.min(this.minSuperRate)),
       year: new FormControl(year),
       grossOnly: new FormControl(grossOnly),
-      gross: '',
-      grossPlusSuper: '',
-      net: '',
-      tax: '',
-      netPlusSuper: ''
+      gross: 0,
+      grossPlusSuper: 0,
+      net: 0,
+      tax: 0,
+      netPlusSuper: 0,
     });
 
     this.taxRate$ = this.calculatorForm.get('year').valueChanges.pipe(
@@ -69,6 +69,22 @@ export class CalculatorComponent implements OnDestroy {
       this.taxRate = taxRate;
       this.calculate();
     });
+
+    this.calculatorForm.get('gross').valueChanges.pipe(
+      takeUntil(this.ngDestroy$),
+    ).subscribe(() => {
+      if (this.calculatorForm.get('grossOnly').value) {
+        this.calculate();
+      }
+    });
+
+    this.calculatorForm.get('grossPlusSuper').valueChanges.pipe(
+      takeUntil(this.ngDestroy$),
+    ).subscribe(() => {
+      if (!this.calculatorForm.get('grossOnly').value) {
+        this.calculate();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -83,20 +99,23 @@ export class CalculatorComponent implements OnDestroy {
     const superRate = form.get('superRate').value;
     let gross = form.get('gross').value;
     let grossPlusSuper = form.get('grossPlusSuper').value;
+    console.log('current snapshot', {grossOnly, gross, superRate, grossPlusSuper});
     if (grossOnly) {
+      console.log('gross => plussuper', gross);
       if (typeof gross === 'number') {
-        grossPlusSuper = gross * (1 + superRate);
+        grossPlusSuper = Number(gross * (1 + superRate / 100)).toFixed(2);
       } else {
-        grossPlusSuper = null;
+        grossPlusSuper = 0;
       }
       form.get('grossPlusSuper').setValue(grossPlusSuper);
     } else {
+      console.log('plussuper => gross', grossPlusSuper);
       if (typeof grossPlusSuper === 'number') {
-        gross = grossPlusSuper / (1 + superRate);
+        gross = Number(grossPlusSuper / (1 + superRate / 100)).toFixed(2);
       } else {
-        gross = null;
-        form.get('gross').setValue(gross);
+        gross = 0;
       }
+      form.get('gross').setValue(gross);
     }
   }
 
