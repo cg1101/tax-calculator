@@ -1,5 +1,5 @@
 <div class="col-sm-6 col-sm-offset-3" [formGroup]="loginForm">
-  <h1>Please login</h1>
+  <h1>Welome, please login</h1>
 
   <label>Username</label>
   <input class="form-control" type="text"
@@ -10,7 +10,7 @@
   <input class="form-control" type="password"
          required formControlName="password">
 
-  <p class="alert-danger">{{auth.error$ | async}}</p>
+  <p class="text-danger">{{auth.error$ | async}}</p>
   <br>
   <label>&nbsp;</label>
   <button type="button" class="btn btn-primary"

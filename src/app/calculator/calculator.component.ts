@@ -37,6 +37,7 @@ export class CalculatorComponent implements OnDestroy {
       grossOnly: new FormControl(grossOnly),
       gross: 0,
       grossPlusSuper: 0,
+      superannuation: 0,
       net: 0,
       tax: 0,
       netPlusSuper: 0,
@@ -65,7 +66,6 @@ export class CalculatorComponent implements OnDestroy {
     });
 
     this.taxRate$.subscribe((taxRate) => {
-      console.log('taxRate changed to', taxRate);
       this.taxRate = taxRate;
       this.calculate();
     });
@@ -92,35 +92,53 @@ export class CalculatorComponent implements OnDestroy {
     this.ngDestroy$.complete();
   }
 
+  getTaxCalculator(taxRate: TaxRate) {
+    return (taxableIncome) => {
+      for (let i in taxRate.tiers) {
+        const [lower, upper, ratio, plus] = taxRate.tiers[i];
+        if (taxableIncome >= lower && taxableIncome < upper) {
+          const tax = plus + (taxableIncome - lower) * ratio;
+          return tax;
+        }
+      }
+    }
+  }
+
   calculate() {
-    console.log('re-calculating');
     const form = this.calculatorForm;
     const grossOnly = form.get('grossOnly').value;
     const superRate = form.get('superRate').value;
     let gross = form.get('gross').value;
     let grossPlusSuper = form.get('grossPlusSuper').value;
-    console.log('current snapshot', {grossOnly, gross, superRate, grossPlusSuper});
     if (grossOnly) {
-      console.log('gross => plussuper', gross);
       if (typeof gross === 'number') {
-        grossPlusSuper = Number(gross * (1 + superRate / 100)).toFixed(2);
+        grossPlusSuper = parseFloat(Number(gross * (1 + superRate / 100)).toFixed(2));
       } else {
         grossPlusSuper = 0;
       }
       form.get('grossPlusSuper').setValue(grossPlusSuper);
     } else {
-      console.log('plussuper => gross', grossPlusSuper);
       if (typeof grossPlusSuper === 'number') {
-        gross = Number(grossPlusSuper / (1 + superRate / 100)).toFixed(2);
+        gross = parseFloat(Number(grossPlusSuper / (1 + superRate / 100)).toFixed(2));
       } else {
         gross = 0;
       }
       form.get('gross').setValue(gross);
     }
+    const calculator = this.getTaxCalculator(this.taxRate);
+    const superannuation = gross * (superRate / 100.0);
+    const tax = calculator(gross);
+    const net = gross - tax;
+    const netPlusSuper = net + superannuation;
+    form.get('tax').setValue(tax);
+    form.get('net').setValue(net);
+    form.get('netPlusSuper').setValue(netPlusSuper);
+    form.get('superannuation').setValue(superannuation);
   }
 
   submit() {
-    console.log('submit form');
+    const data = this.calculatorForm.value;
+    console.log('submit form using data', data);
   }
 
 }

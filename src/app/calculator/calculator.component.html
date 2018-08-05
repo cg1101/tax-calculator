@@ -48,13 +48,13 @@
   </div>
 
   <label>Tax</label>
-  <input class="form-control" formControlName="tax" readonly>
+  <div class="form-control">{{calculatorForm.value.tax | number:'1.2-2'}}</div>
 
   <label>Net</label>
-  <input class="form-control" formControlName="net" readonly>
+  <div class="form-control">{{calculatorForm.value.net | number:'1.2-2'}}</div>
 
   <label>Net + Superannuation</label>
-  <input class="form-control" formControlName="netPlusSuper" readonly>
+  <div class="form-control">{{calculatorForm.value.netPlusSuper | number:'1.2-2'}}</div>
 
   <br>
   <label>&nbsp;</label>
@@ -63,9 +63,6 @@
           (click)="submit()">
     Submit
   </button>
-
-  grossOnly: {{calculatorForm.get('grossOnly').value}} <br>
-  <br>
 
   {{calculatorForm.value | json}}
 </div>
