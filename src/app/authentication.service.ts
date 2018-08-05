@@ -13,9 +13,7 @@ export class AuthenticationService {
   userInfo$ = new BehaviorSubject<any>(null);
   error$ = new BehaviorSubject<string>('');
 
-  constructor(protected http: HttpClient, protected router: Router) {
-    console.log('AuthenticationService is being created');
-  }
+  constructor(protected http: HttpClient, protected router: Router) { }
 
   login(username: string, password: string) {
     this.http.post<any>('/login', {username, password}, {observe: 'response'}).pipe(
@@ -24,7 +22,6 @@ export class AuthenticationService {
         return throwError(error);
       })
     ).subscribe(response => {
-      console.log('login response=> ', response);
       if (response.status === 200) {
         // login success
         this.isLoggedIn$.next(true);

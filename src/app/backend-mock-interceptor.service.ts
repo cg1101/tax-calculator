@@ -8,8 +8,6 @@ import { Observable, of } from 'rxjs';
 export class BackendMockInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('intercepted url', request.url);
-
     // wrap in delayed observable to simulate server api call
     if (request.url === '/login') {
       if (request.body.username === 'testuser' && request.body.password === 'password') {

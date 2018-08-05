@@ -1,4 +1,4 @@
-<nav class="nav-bar navbar-default">
+<nav class="nav-bar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand">Tax Calculator</a>
@@ -8,8 +8,11 @@
       <ul class="nav navbar-nav">
         <li><a routerLink="/calculator" routerLinkActive="active">Calculator</a></li>
         <li><a routerLink="/history" routerLinkActive="active">History</a></li>
-        <li><a (click)="auth.logout()">Logout</a></li>
       </ul>
+      <p class="navbar-text navbar-right">
+        {{(auth.userInfo$ | async).fullName}}&nbsp;&nbsp;
+        <a (click)="auth.logout()">Logout</a>
+      </p>
     </div>
   </div>
 </nav>

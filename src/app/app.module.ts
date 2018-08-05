@@ -9,7 +9,7 @@ import { HistoryComponent } from './history/history.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ShellComponent } from './shell/shell.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BackendMockInterceptor } from './backend-mock-interceptor.service';
 
 @NgModule({
@@ -23,6 +23,7 @@ import { BackendMockInterceptor } from './backend-mock-interceptor.service';
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
   ],

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { TaxRate } from './tax-rate';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,8 @@ export class BackendService {
 
   constructor() { }
 
-  getCurrentRate(): TaxRate {
-    return {
+  getYearRate(year): Observable<TaxRate> {
+    return of(<TaxRate>{
       tiers: [
         [0, 18200, 0, 0],
         [18200, 37000, 0.19, 0],
@@ -18,6 +19,6 @@ export class BackendService {
         [87000, 180000, 0.37, 19822],
         [180000, +Infinity, 0.45, 54232],
       ],
-    };
+    });
   }
 }

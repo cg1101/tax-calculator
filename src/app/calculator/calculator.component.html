@@ -1,16 +1,69 @@
-<div class="col-sm-8 col-sm-offset-2">
+<div class="col-sm-8 col-sm-offset-2" [formGroup]="calculatorForm">
+
   <h1>Welcome, {{(auth.userInfo$ | async).fullName}}</h1>
 
   <p>Please input</p>
 
   <label>Superannuation percentage</label>
   <div class="input-group">
-    <input class="form-control" type="number" min="9.5">
+    <input class="form-control" type="number"
+           formControlName="superRate"
+           required
+           [min]="minSuperRate">
     <div class="input-group-addon">%</div>
   </div>
 
+  <label>Year</label>
+  <input class="form-control"
+         type="number"
+         formControlName="year"
+         required>
+
   <label>Gross</label>
-  <input class="form-control" type="number" min="">
+  <div class="input-group">
+    <div class="input-group-addon">
+      <input type="radio"
+             formControlName="grossOnly" [value]="true">
+      <span>&nbsp;Gross</span>
+    </div>
+    <input class="form-control"
+           formControlName="gross"
+           required
+           [readonly]="!calculatorForm.get('grossOnly').value">
+  </div>
 
   <label>Gross + Superannuation</label>
+  <div class="input-group">
+    <div class="input-group-addon">
+      <input type="radio"
+             formControlName="grossOnly" [value]="false">
+      <span>&nbsp;Gross+Super</span>
+    </div>
+    <input class="form-control"
+           formControlName="grossPlusSuper"
+           required
+           [readonly]="calculatorForm.get('grossOnly').value">
+  </div>
+
+  <label>Tax</label>
+  <input class="form-control" formControlName="tax" readonly>
+
+  <label>Net</label>
+  <input class="form-control" formControlName="net" readonly>
+
+  <label>Net + Superannuation</label>
+  <input class="form-control" formControlName="netPlusSuper" readonly>
+
+  <br>
+  <label>&nbsp;</label>
+  <button type="button" class="btn btn-primary"
+          [disabled]="calculatorForm.invalid"
+          (click)="submit()">
+    Submit
+  </button>
+
+  grossOnly: {{calculatorForm.get('grossOnly').value}} <br>
+  <br>
+
+  {{calculatorForm.value | json}}
 </div>

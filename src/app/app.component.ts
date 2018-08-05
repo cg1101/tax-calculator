@@ -8,8 +8,6 @@ import { AuthenticationService } from './authentication.service';
 })
 export class AppComponent {
 
-  constructor(public auth: AuthenticationService) {
-    console.log('AppComponent constructor');
-  }
+  constructor(public auth: AuthenticationService) { }
 
 }
