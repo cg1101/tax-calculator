@@ -1,0 +1,20 @@
+<div class="col-sm-6 col-sm-offset-3" [formGroup]="loginForm">
+  <h1>Please login</h1>
+
+  <label>Username</label>
+  <input class="form-control" type="text"
+         required formControlName="username">
+
+
+  <label>Password</label>
+  <input class="form-control" type="password"
+         required formControlName="password">
+
+  <p class="alert-danger">{{auth.error$ | async}}</p>
+  <br>
+  <label>&nbsp;</label>
+  <button type="button" class="btn btn-primary"
+          [disabled]="loginForm.invalid"
+          (click)="auth.login(loginForm.get('username').value, loginForm.get('password').value)">Login
+  </button>
+</div>

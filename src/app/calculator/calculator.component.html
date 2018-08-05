@@ -1,0 +1,16 @@
+<div class="col-sm-8 col-sm-offset-2">
+  <h1>Welcome, {{(auth.userInfo$ | async).fullName}}</h1>
+
+  <p>Please input</p>
+
+  <label>Superannuation percentage</label>
+  <div class="input-group">
+    <input class="form-control" type="number" min="9.5">
+    <div class="input-group-addon">%</div>
+  </div>
+
+  <label>Gross</label>
+  <input class="form-control" type="number" min="">
+
+  <label>Gross + Superannuation</label>
+</div>
