@@ -6,6 +6,21 @@ import { TaxRate } from './tax-rate';
 const KEY = 'tax_calculator';
 const HISTORY_REGEX = /\/users\/(\d+)\/history/;
 
+const VALID_USERS = [
+  {
+    username: 'testuser',
+    password: 'password',
+    userId: 12345,
+    fullName: 'John Smith',
+  },
+  {
+    username: 'mark.jones',
+    password: 'mj123',
+    userId: 23456,
+    fullName: 'Mark Jones',
+  },
+];
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,20 +42,27 @@ export class BackendMockInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // wrap in delayed observable to simulate server api call
     if (request.url === '/login') {
-      if (request.body.username === 'testuser' && request.body.password === 'password') {
-        return of(new HttpResponse({
-          status: 200, body: {
-            userId: 12345,
-            fullName: 'John Smith',
-          }
-        }));
-      } else {
-        return of(new HttpResponse({
-          status: 401, body: {
-            error: 'invalid username or password',
-          }
-        }));
+      console.log('trying login');
+      const {username, password} = request.body;
+      for (let i = 0; i < VALID_USERS.length; i++) {
+        const user = VALID_USERS[i];
+        console.log('trying user', user);
+        if (username === user.username && password === user.password) {
+          return of(new HttpResponse({
+            status: 200,
+            body: {
+              ...user
+            }
+          }));
+        }
+        console.log('no match, try next');
       }
+      return of(new HttpResponse({
+        status: 401,
+        body: {
+          error: 'invalid username or password',
+        }
+      }));
     } else if (request.url.match(HISTORY_REGEX)) {
       const userId = request.url.match(HISTORY_REGEX)[1];
       const store = BackendMockInterceptor.getDataStore();

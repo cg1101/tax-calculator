@@ -27,6 +27,7 @@
     <input class="form-control"
            formControlName="gross"
            type="number"
+           [min]="0"
            required
            [readonly]="!calculatorForm.get('grossOnly').value">
   </div>
@@ -57,7 +58,7 @@
   <br>
   <label>&nbsp;</label>
   <button type="button" class="btn btn-primary"
-          [disabled]="calculatorForm.invalid"
+          [disabled]="calculatorForm.invalid || calculatorForm.get('gross').value <= 0"
           (click)="submit()">
     Submit
   </button>

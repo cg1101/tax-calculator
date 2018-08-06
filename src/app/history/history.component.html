@@ -3,7 +3,8 @@
 </div>
 
 <div *ngIf="records.length > 0">
-  <p>You have {{records.length}} record{{records.length === 1 ? '' : 's'}}.</p>
+  <p>You have {{records.length}} record{{records.length === 1 ? '' : 's'}}. Do you want
+    to <a routerLink="/calculator">add more</a>?</p>
 
   <table class="table table-bordered">
     <tr>
@@ -19,7 +20,7 @@
     </tr>
     <tr *ngFor="let rec of records; index as i">
       <td>{{i + 1}}</td>
-      <td>{{rec.year | currency}}</td>
+      <td>{{rec.year}}</td>
       <td>{{rec.gross | currency}}</td>
       <td>{{rec.superannuation | currency}}</td>
       <td>{{rec.tax | currency}}</td>
