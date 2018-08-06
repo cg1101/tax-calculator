@@ -1,6 +1,4 @@
-<div class="col-sm-8 col-sm-offset-2" [formGroup]="calculatorForm">
-
-  <h1>Welcome, {{(auth.userInfo$ | async).fullName}}</h1>
+<div [formGroup]="calculatorForm">
 
   <p>Please input</p>
 
@@ -64,5 +62,7 @@
     Submit
   </button>
 
+  <!--
   {{calculatorForm.value | json}}
+  -->
 </div>

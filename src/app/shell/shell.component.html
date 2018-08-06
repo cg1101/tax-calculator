@@ -1,1 +1,7 @@
-<router-outlet></router-outlet>
+<div>
+
+  <h1>Welcome, {{(auth.userInfo$ | async).fullName}}</h1>
+
+  <router-outlet></router-outlet>
+
+</div>

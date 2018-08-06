@@ -3,7 +3,8 @@ import { TaxRate } from './tax-rate';
 export class TaxRecord {
   taxRate: TaxRate;
   createdAt: Date;
-  taxableIncome: number;
+  gross: number;
+  grossPlusSuper;
   superannuation: number;
   tax: number;
   net: number;  // taxableIncome - tax

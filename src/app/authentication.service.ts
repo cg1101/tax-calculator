@@ -26,7 +26,7 @@ export class AuthenticationService {
         // login success
         this.isLoggedIn$.next(true);
         this.userInfo$.next(response.body);
-        this.router.navigate(['/calculator']);
+        this.router.navigate(['/history']);
       } else {
         // login failed
         this.isLoggedIn$.next(false);

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subject, Observable, combineLatest } from 'rxjs';
-import { distinctUntilChanged, map, share, startWith, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, switchMap } from 'rxjs/operators';
 
 import { AuthenticationService } from '../authentication.service';
 import { BackendService } from '../backend.service';
@@ -33,8 +33,8 @@ export class CalculatorComponent implements OnDestroy {
     const grossOnly = true;
     this.calculatorForm = this.fb.group({
       superRate: new FormControl(superRate, Validators.min(this.minSuperRate)),
-      year: new FormControl(year),
-      grossOnly: new FormControl(grossOnly),
+      year: year,
+      grossOnly: true,
       gross: 0,
       grossPlusSuper: 0,
       superannuation: 0,
@@ -46,8 +46,8 @@ export class CalculatorComponent implements OnDestroy {
     this.taxRate$ = this.calculatorForm.get('year').valueChanges.pipe(
       startWith({year}),
       distinctUntilChanged(),
-      switchMap(year => {
-        return this.backend.getYearRate(year);
+      switchMap(yr => {
+        return this.backend.getRateByYear(yr);
       }),
     );
 
@@ -94,14 +94,14 @@ export class CalculatorComponent implements OnDestroy {
 
   getTaxCalculator(taxRate: TaxRate) {
     return (taxableIncome) => {
-      for (let i in taxRate.tiers) {
+      for (let i = 0; i < taxRate.tiers.length; i++) {
         const [lower, upper, ratio, plus] = taxRate.tiers[i];
         if (taxableIncome >= lower && taxableIncome < upper) {
           const tax = plus + (taxableIncome - lower) * ratio;
           return tax;
         }
       }
-    }
+    };
   }
 
   calculate() {
@@ -136,9 +136,26 @@ export class CalculatorComponent implements OnDestroy {
     form.get('superannuation').setValue(superannuation);
   }
 
-  submit() {
-    const data = this.calculatorForm.value;
-    console.log('submit form using data', data);
+  resetForm() {
+    const year = (new Date).getFullYear();
+    const form = this.calculatorForm;
+    form.get('superRate').setValue(this.minSuperRate);
+    form.get('year').setValue(year);
+    form.get('grossOnly').setValue(true);
+    form.get('gross').setValue(0);
+    form.get('grossPlusSuper').setValue(0);
+    form.get('superannuation').setValue(0);
+    form.get('net').setValue(0);
+    form.get('tax').setValue(0);
+    form.get('netPlusSuper').setValue(0);
   }
 
+  submit() {
+    const data = this.calculatorForm.value;
+    data.taxRate = this.taxRate;
+    this.backend.addRecord(data).subscribe(() => {
+      alert('saved');
+      this.resetForm();
+    });
+  }
 }
