@@ -14,6 +14,6 @@ export class LoginComponent {
     password: new FormControl(''),
   });
 
-  constructor(protected auth: AuthenticationService) { }
+  constructor(public auth: AuthenticationService) { }
 
 }
